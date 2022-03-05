@@ -5,7 +5,7 @@
 #                                                                             #
 # PURPOSE:  Utility code for AST3110 Tutorial 4 at Macquarie University.      #
 #                                                                             #
-# MODIFIED: 01-Apr-2020 by C. Purcell                                         #
+# MODIFIED: 01-Apr-2020 by C. Purcell, 17-Mar-2021 by M.Owers                 #
 #                                                                             #
 #=============================================================================#
 import numpy as np
@@ -14,38 +14,30 @@ from matplotlib.ticker import MaxNLocator, ScalarFormatter
 
 
 #-----------------------------------------------------------------------------#
-def poly5(p):
+
+def polyN(p):
     """
     When called, this function takes a vector of parameters
-    and returns another functions to evaluate a polynomial
+    and returns another function to evaluate a polynomial
     with these coefficients fixed.
     """
-
-    # Pad out p vectors smaller than len = 6 (longhand version)
-    #numPad = 6 - len(p)
-    #pad = np.zeros((numPad))
-    #p = np.append(pad, p)
-
-    # Pad out p vectors smaller than len = 6 (shorthand version)
-    p = np.append(np.zeros((6-len(p))), p)
-
+    
     def rfunc(x):
         """
-        This function is returned by the poly5 function. It takes a
-        vector of x values and evaluated the current polynomial.
+        This function is returned by the polyN function. It takes a
+        vector of x values and loops over the order number, generating an Nth order polynomial.
         """
-        y = (p[0]*x**5.0 + p[1]*x**4.0 + p[2]*x**3.0 +
-             p[3]*x**2.0 + p[4]*x + p[5])
-
+        y = 0
+        for i in np.arange(len(p)):
+            y += p[i]*x**float(i)
         # Note the indent here
         return y
 
     # Note the indent here
     return rfunc
 
-
 #-----------------------------------------------------------------------------#
-def plot_spec_poly5(xData, yData, dyData, p=None):
+def plot_spec_polyN(xData, yData, dyData, p=None):
     """
     Function to plot a spectrum and (optionally) a model polynomial fit.
     """
@@ -69,7 +61,7 @@ def plot_spec_poly5(xData, yData, dyData, p=None):
         xModel = np.linspace(start=np.min(xData),
                              stop=np.max(xData),
                              num=nSamples)
-        yModel = poly5(p)(xModel)
+        yModel = polyN(p)(xModel)
 
         # Plot the model
         ax.plot(xModel, yModel, color="red", marker="None",
